@@ -1,0 +1,24 @@
+----PIECES----
+02 = T
+07 = J
+08 = Z
+0a = O
+0b = S
+0e = L
+12 = I
+
+----READ----
+field               := 400 - 4c7
+update_cicle        := 61 //counts since last drop
+level               :=
+controller_input    := f7
+current_piece       := 62
+next_piece          := bf
+frames_since_drops  := 65
+piece_x             := 60
+piece_y             := 61
+----WRITE----
+level               := 
+
+----READ_WRITE----
+line_count          := 70 //transition at 10 lines

@@ -1,0 +1,18 @@
+//this file describes how input and output data
+//should look like 
+//or rather what data is sent between the emulator and 
+//the neural network
+
+---- INPUT ----
+FIELD           | 20 * 10   | 0, 1
+T_PIECE         | 1         | 0, 4
+J_PIECE         | 1         | 0, 4
+Z_PIECE         | 1         | 0, 2
+O_PIECE         | 1         | 0, 1
+S_PIECE         | 1         | 0, 2
+L_PIECE         | 1         | 0, 4
+I_PIECE         | 1         | 0, 2
+X_POS           | 1         | 0, 10
+Y_POS           | 1         | 0, 20
+NEXT_PIECE      | 1         | 0, 7
+DROP_TIME       | 1         | 10, 0
