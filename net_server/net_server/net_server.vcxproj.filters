@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="nnet">
+      <UniqueIdentifier>{3fbc4d1c-6c20-4999-aa2a-b624acf0b227}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\nnet\nnet\trainer.cc">
+      <Filter>nnet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\nnet\nnet\nutil.cc">
+      <Filter>nnet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\nnet\nnet\nnet.cc">
+      <Filter>nnet</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\nnet\nnet\mstd.h">
+      <Filter>nnet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\nnet\nnet\vmath.h">
+      <Filter>nnet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\nnet\nnet\trainer.h">
+      <Filter>nnet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\nnet\nnet\nutil.h">
+      <Filter>nnet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\nnet\nnet\nnet.h">
+      <Filter>nnet</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
