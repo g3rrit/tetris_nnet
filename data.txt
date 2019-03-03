@@ -16,3 +16,9 @@ X_POS           | 1         | 0, 10
 Y_POS           | 1         | 0, 20
 NEXT_PIECE      | 1         | 0, 7
 DROP_TIME       | 1         | 10, 0
+
+---- OUTPUT ----
+MOVE_LEFT       | 1         | 0, 1
+MOVE_RIGHT      | 1         | 0, 1
+ROTATE_LEFT     | 1         | 0, 1
+ROTATE_RIGHT    | 1         | 0, 1

@@ -20,7 +20,7 @@ function write_bytes(addr, val_arr, size)
    end
 end
 
----- INPUT ----
+---- NNET_INPUT ----
 
 Input = {}
 Input.__index = Input
@@ -59,28 +59,35 @@ Player_Input = {}
 Player_Input.__index = Player_Input
 
 function Player_Input:new() 
-
+   local player_input = joypad.get(1)
+   setmetatable(player_input, Player_Input)
+   return player_input
 end
 
 --------------------
 
 function wait_on_menue()
-   while(read_byte(0x10c3) or read_byte(0x10a8)) do end
+   for i=0, 100 do
+      emu.frameadvance()
+   end
+   while((read_byte(0x10c3) ~= 0) or (read_byte(0x10a8) ~= 0)) do
+      emu.frameadvance()
+   end
 end
 
 function start()
    emu.poweron()
-   wait_on_menue()
-
-   local jp = joypad.get(0)
-   emu.print(jp)
    update()
 end
 
 
 function update() 
    local running = true
+   wait_on_menue()
+   emu.print("done waiting")
    while(running) do
+      local jp = joypad.get(1)
+      emu.print(jp)
       emu.frameadvance()
    end
 end

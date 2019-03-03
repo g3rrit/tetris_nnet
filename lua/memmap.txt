@@ -17,6 +17,7 @@ next_piece          := bf
 frames_since_drops  := 65
 piece_x             := 60
 piece_y             := 61
+game_over           := 400 //needs to be 4f
 
 in_start_screen     := 10c3  && 10a8 //both need to be 0
 ----WRITE----
