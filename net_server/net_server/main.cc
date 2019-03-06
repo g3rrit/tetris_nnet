@@ -2,6 +2,7 @@
 
 #include "nnet.h"
 #include "mstd.h"
+#include "nnet_host.h"
 
 using ML::Nnet_Structure;
 using ML::Nnet;
@@ -9,14 +10,10 @@ using ML::Nnet;
 int main() {
   std::cout << "Starting Tetris Neural Net Server\n";
 
-  Nnet_Structure structure;
-  structure.push_back(10);
-  structure.push_back(10);
-  Nnet net{structure};
-  
-  std::cout << "network:" << net << "\n";
-
-  getchar();
+  Nnet_Host host;
+  host.run();
 
   return 0;
 }
+
+

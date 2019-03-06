@@ -1,10 +1,20 @@
-output_file = "tetris_net.in"
-input_file = "tetris_net.out"
+--output_file = "tetris_net.in"
+--input_file = "tetris_net.out"
+
+socket = require "socket.core"
+--connect to nnet server
+s = socket.tcp()
+s:connect("127.0.0.1", 7777)
+if(not s) then
+   emu.print("unable to connect to host")
+   return
+end
+emu.print("connected to host")
 
 ---- MEMORY UTIL ----
 
 function read_byte(addr)
-   return memory.readbyteunsigned(addr)
+   return memory.readbyte(addr)
 end
 
 function read_bytes(addr, count)
@@ -30,7 +40,7 @@ function Input:new()
    local input = {}
    setmetatable(input, Input)
    
-   input.field = read_bytes(0x400, 0xc7)
+   input.field = read_bytes(0x400, 200)
    
    local piece = read_byte(0x62)
    input.t_piece = 0
@@ -56,7 +66,7 @@ function Input:new()
    elseif(piece <= 0x12) then
       input.i_piece = piece - 0xf
    else
-      print("input error")
+      print("input error piece: ", piece)
    end
 
    input.x_pos = read_byte(0x60)
@@ -78,7 +88,7 @@ function Input:new()
    elseif(next_piece <= 0x12) then
       input.next_piece = 6
    else
-      print("input error")
+      print("input error next_piece: ", next_piece)
    end
 
    input.drop_time = read_byte(0x65)
@@ -86,23 +96,21 @@ function Input:new()
    return input
 end
 
-function Input:save()
-   local file = io.open(input_file, "wb")
+function Input:send()
 
-   file:write(self.field)
-   file:write(self.t_piece)
-   file:write(self.j_piece)
-   file:write(self.z_piece)
-   file:write(self.o_piece)
-   file:write(self.s_piece)
-   file:write(self.l_piece)
-   file:write(self.i_piece)
-   file:write(self.x_pos)
-   file:write(self.y_pos)
-   file:write(self.next_piece)
-   file:write(self.drop_time)
+   s:send(self.field)
+   s:send(self.t_piece)
+   s:send(self.j_piece)
+   s:send(self.z_piece)
+   s:send(self.o_piece)
+   s:send(self.s_piece)
+   s:send(self.l_piece)
+   s:send(self.i_piece)
+   s:send(self.x_pos)
+   s:send(self.y_pos)
+   s:send(self.next_piece)
+   s:send(self.drop_time)
 
-   io.close(file)
 end
 
 --- NNET_OUTPUT ----
@@ -114,22 +122,21 @@ function Output:new()
    local output = {}
    setmetatable(output, Output)
 
-   -- wait till nnet server processes input and
-   -- creates file
-   while(~file_exists(output_file)) do end
-   local file = io.open(output_file, "rb")
-
-   local move = file:read(1)
+   local move = nil
+   while(move == nil) do
+      move = s:receive(1)
+   end
    -- | 0 - dont move
    -- | 1 - move left
    -- | 2 - move right
-   local rotate = file:read(1)
+   local rotate = nil
+   while(rotate == nil) do
+      rotate = s:receive(1)
+   end
    -- | 0 - dont rotate
    -- | 1 - rotate left 
    -- | 2 - rotate right
 
-   io.close(file)
-   
    if(move == 0) then
       output.move_left = false
       output.move_right = false
@@ -140,27 +147,27 @@ function Output:new()
       output.move_left = false
       output.move_right = true
    else
-      emu.print("input error")
+      emu.print("input error move: ", move)
    end
 
    if(rotate == 0) then
       output.rotate_left = false
       output.rotate_right = false
-   elseif(rotate = 1) then
+   elseif(rotate == 1) then
       output.rotate_left = true
       output.rotate_right = false
-   elseif(rotate = 2) then
+   elseif(rotate == 2) then
       output.rotate_left = false
       output.rotate_right = true
    else 
-      print("input error")
+      print("input error rotate: ", rotate)
    end
 
    return output
 end
 
 function Output:exec()
-   lcoal jp = joypad.get(1)
+   local jp = joypad.get(1)
    jp.left = self.move_left
    jp.right = self.move_right
    jp.A = self.rotate_left
@@ -183,34 +190,54 @@ function wait_on_menue()
    end
 end
 
+function skip_frames(n) 
+   for i = 0, n do
+      emu.frameadvance()
+   end
+end
+
+function press_start()
+   local jp = joypad.get(1)
+   jp.start = true
+   joypad.set(1, jp)
+   emu.frameadvance()
+   skip_frames(10)
+end
+
+
 function new_game()
    local running = true
    emu.poweron()
    wait_on_menue()
+   skip_frames(10)
+
+   -- select menue
+   press_start()
    
+   -- select music
+   press_start()
+   -- select level
+   press_start()
 
    while(running) do
       -- set line_count so transition doesnt happen
       write_byte(0x70, 0)
       
       -- check for gameover
-      if(read_byte(0x400, 0x4f)) then
+      if(read_byte(0x400) == 0x4f) then
          running = false
          break
       end
 
       emu.frameadvance()
       local input = Input:new()
-      input:save()
+      input:send()
+      print(input)
 
       local output = Output:new()
       output:exec()
    end
 end
 
-function start()
-   while(true) do new_game() end
-end
+while(true) do new_game() end
 
-
-start()

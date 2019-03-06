@@ -137,7 +137,9 @@
     <ClCompile Include="..\..\lib\nnet\nnet\nnet.cc" />
     <ClCompile Include="..\..\lib\nnet\nnet\nutil.cc" />
     <ClCompile Include="..\..\lib\nnet\nnet\trainer.cc" />
+    <ClCompile Include="ipc.cc" />
     <ClCompile Include="main.cc" />
+    <ClCompile Include="nnet_host.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\nnet\nnet\mstd.h" />
@@ -145,6 +147,9 @@
     <ClInclude Include="..\..\lib\nnet\nnet\nutil.h" />
     <ClInclude Include="..\..\lib\nnet\nnet\trainer.h" />
     <ClInclude Include="..\..\lib\nnet\nnet\vmath.h" />
+    <ClInclude Include="ipc.h" />
+    <ClInclude Include="nnet_host.h" />
+    <ClInclude Include="nstd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

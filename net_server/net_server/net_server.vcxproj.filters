@@ -30,6 +30,12 @@
     <ClCompile Include="..\..\lib\nnet\nnet\nnet.cc">
       <Filter>nnet</Filter>
     </ClCompile>
+    <ClCompile Include="ipc.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nnet_host.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\nnet\nnet\mstd.h">
@@ -46,6 +52,15 @@
     </ClInclude>
     <ClInclude Include="..\..\lib\nnet\nnet\nnet.h">
       <Filter>nnet</Filter>
+    </ClInclude>
+    <ClInclude Include="ipc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nstd.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nnet_host.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
