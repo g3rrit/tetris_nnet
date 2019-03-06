@@ -97,19 +97,33 @@ function Input:new()
 end
 
 function Input:send()
-
-   s:send(self.field)
+   
+   for _,val in field do
+      s:send(val)
+      s:send(" ")
+   end
    s:send(self.t_piece)
+   s:send(" ")
    s:send(self.j_piece)
+   s:send(" ")
    s:send(self.z_piece)
+   s:send(" ")
    s:send(self.o_piece)
+   s:send(" ")
    s:send(self.s_piece)
+   s:send(" ")
    s:send(self.l_piece)
+   s:send(" ")
    s:send(self.i_piece)
+   s:send(" ")
    s:send(self.x_pos)
+   s:send(" ")
    s:send(self.y_pos)
+   s:send(" ")
    s:send(self.next_piece)
+   s:send(" ")
    s:send(self.drop_time)
+   s:send(" ")
 
 end
 
@@ -126,6 +140,7 @@ function Output:new()
    while(move == nil) do
       move = s:receive(1)
    end
+   move = tonumber(move)
    -- | 0 - dont move
    -- | 1 - move left
    -- | 2 - move right
@@ -133,6 +148,7 @@ function Output:new()
    while(rotate == nil) do
       rotate = s:receive(1)
    end
+   rotate = tonumber(rotate)
    -- | 0 - dont rotate
    -- | 1 - rotate left 
    -- | 2 - rotate right
