@@ -54,17 +54,17 @@ function Input:new()
    if(piece <= 3) then
       input.t_piece = piece + 1
    elseif(piece <= 7) then
-      input.j_piece = piece - 2
+      input.j_piece = piece - 3
    elseif(piece <= 9) then
-      input.z_piece = piece - 6
+      input.z_piece = piece - 7
    elseif(piece <= 0xa) then
       input.o_piece = 1
    elseif(piece <= 0xc) then
-      input.s_piece = piece - 9
+      input.s_piece = piece - 0xa
    elseif(piece <= 0x10) then
-      input.l_piece = piece - 0xb
+      input.l_piece = piece - 0xc
    elseif(piece <= 0x12) then
-      input.i_piece = piece - 0xf
+      input.i_piece = piece - 0x10
    else
       print("input error piece: ", piece)
    end
@@ -98,8 +98,11 @@ end
 
 function Input:send()
    
-   for _,val in field do
-      s:send(val)
+   for i=1, #self.field do
+      local val = self.field:byte(i)
+      if(val == 239) then
+         s:send("0")
+      else s:send("1") end
       s:send(" ")
    end
    s:send(self.t_piece)
@@ -176,7 +179,7 @@ function Output:new()
       output.rotate_left = false
       output.rotate_right = true
    else 
-      print("input error rotate: ", rotate)
+      emu.print("input error rotate: ", rotate)
    end
 
    return output
@@ -248,7 +251,7 @@ function new_game()
       emu.frameadvance()
       local input = Input:new()
       input:send()
-      print(input)
+      --print(input)
 
       local output = Output:new()
       output:exec()

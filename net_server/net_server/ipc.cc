@@ -25,9 +25,9 @@ u8 recv_as_bytes(SOCKET s) {
   for(;;) {
     int res = recv(s, &recvc, 1, 0);
     if (res > 0) {
-      printf("Bytes received: %d | Offset: %d\n", res, offset);
+      //printf("Bytes received: %d | Offset: %d\n", res, offset);
       if(recvc == ' ') {
-        return (u8)strtoi(buffer);
+        return (u8)strtol(buffer, nullptr, 10);
       }
       if(recvc >= 48 && recvc <= 57) {
         buffer[offset] = recvc;
@@ -49,9 +49,9 @@ u8 recv_as_bytes(SOCKET s) {
 
 int send_as_str(SOCKET s, u8 val) {
   char buffer[32] = {0};
-  sprintf(buffer, "%d\n", (int)val);
+  sprintf(buffer, "%d", (int)val);
   int bsent = 0;
-  for(int i = strlen(buffer); bsent <= i;) {
+  for(int i = strlen(buffer); bsent < i;) {
     bsent += send(s, (const char*)buffer + bsent, strlen(buffer), 0);
     if (bsent == SOCKET_ERROR) {
       printf("send failed with error: %d\n", WSAGetLastError());
@@ -136,6 +136,7 @@ int start_host(void(*cb)(void *, Request *, Response *), void *env)
     WSACleanup();
     return 1;
   }
+  printf("Client connected!\n");
 
   // No longer need server socket
   closesocket(ListenSocket);
@@ -148,7 +149,6 @@ int start_host(void(*cb)(void *, Request *, Response *), void *env)
   for(;;) {
     recvc = recv_as_bytes(ClientSocket);
     if (recvc < 255) {
-      printf("Bytes received: %d | Offset: %d\n", iResult, offset);
       
       recvbuf[offset] = recvc;
       
@@ -175,8 +175,8 @@ int start_host(void(*cb)(void *, Request *, Response *), void *env)
             
       cb(env, &request, &response);
 
-      if(!send_as_string(s, response.move)) return 1;
-      if(!send_as_string(s, response.rotate)) return 1;
+      if(!send_as_str(ClientSocket, response.move)) return 1;
+      if(!send_as_str(ClientSocket, response.rotate)) return 1;
 
       printf("Sent Response\n");
       //response sent

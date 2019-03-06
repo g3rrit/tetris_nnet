@@ -2,7 +2,7 @@
 
 #include "nstd.h"
 
-#define REQUEST_SIZE 211
+#define REQUEST_SIZE 210
 struct Request {
   u8 field[20 * 10];
   u8 t_piece;
