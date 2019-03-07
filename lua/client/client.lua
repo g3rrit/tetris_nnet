@@ -125,9 +125,29 @@ function Input:send()
    s:send(" ")
    s:send(self.next_piece)
    s:send(" ")
-   s:send(self.drop_time)
-   s:send(" ")
 
+end
+
+function compare(in1, in2) 
+   if(in1 == nil or in2 == nil) then return false end
+   for i=1, #in1.field do
+      local val1 = in1.field:byte(i)
+      local val2 = in2.field:byte(i)
+      if(val1 ~= val2) then return false end
+   end
+   if(in1.t_piece ~= in2.t_piece
+      or in1.j_piece ~= in2.j_piece
+      or in1.z_piece ~= in2.z_piece
+      or in1.o_piece ~= in2.o_piece
+      or in1.s_piece ~= in2.s_piece
+      or in1.l_piece ~= in2.l_piece
+      or in1.i_piece ~= in2.i_piece
+      or in1.x_pos ~= in2.x_pos 
+      or in1.y_pos ~= in2.y_pos
+      or in1.next_piece ~= in2.next_piece) then
+      return false
+   end
+   return true
 end
 
 --- NNET_OUTPUT ----
@@ -238,6 +258,7 @@ function new_game()
    -- select level
    press_start()
 
+   local prev = nil
    while(running) do
       -- set line_count so transition doesnt happen
       write_byte(0x70, 0)
@@ -250,11 +271,14 @@ function new_game()
 
       emu.frameadvance()
       local input = Input:new()
-      input:send()
-      --print(input)
+      if(not compare(input, prev)) then
+         input:send()
+         --print(input)
 
-      local output = Output:new()
-      output:exec()
+         local output = Output:new()
+         output:exec()
+      end
+      prev = input
    end
 end
 

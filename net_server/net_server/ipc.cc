@@ -169,7 +169,6 @@ int start_host(void(*cb)(void *, Request *, Response *), void *env)
       memcpy(&request.x_pos, recvbuf + 207, 1);
       memcpy(&request.y_pos, recvbuf + 208, 1);
       memcpy(&request.next_piece, recvbuf + 209, 1);
-      memcpy(&request.drop_time, recvbuf + 210, 1);
 
       printf("Received Request\n");
             

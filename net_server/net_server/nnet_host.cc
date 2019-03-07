@@ -18,7 +18,6 @@ void print_request(Request *req) {
     << "X_POS: " << (int)req->x_pos << "\n"
     << "Y_POS: " << (int)req->y_pos << "\n"
     << "NEXT_PIECE: " << (int)req->next_piece << "\n" 
-    << "DROP_TIME: " << (int)req->drop_time << "\n"
     << "---------------------\n";
 }
 
@@ -46,12 +45,42 @@ void request_callback(void *_host, Request *req, Response *res) {
   host->input.set(207, (f64)req->x_pos);
   host->input.set(208, (f64)req->y_pos);
   host->input.set(209, (f64)req->next_piece);
-  host->input.set(210, (f64)req->drop_time);
   // --------
 
+  host->lock();
   Vec<f64> *out = host->nnet.get_output(host->input);
-  res->move = out->get(0) >= out->get(1) ? 1 : 0;
-  res->rotate = out->get(2) >= out->get(3) ? 1 : 0;
+  host->unlock();
+  u8 move = 0;
+  u8 rotate = 0;
+  f64 move_left = out->get(0);
+  f64 move_right = out->get(1);
+  f64 rotate_left = out->get(2);
+  f64 rotate_right = out->get(3);
+
+  std::cout << "OUTPUT:\n"
+    << "move_left: " << move_left << "\n"
+    << "move_right: " << move_right << "\n"
+    << "rotate_left: " << rotate_left << "\n"
+    << "rotate_right: " << rotate_right << "\n";
+
+  if(move_left >= 0.5 &&  move_left > move_right + 0.2) {
+    move = 1;
+  } else if(move_right >= 0.5 && move_right > move_left + 0.2) {
+    move = 2;
+  } else {
+    move = 0;
+  }
+
+  if(rotate_left >= 0.5  && rotate_left > rotate_right + 0.2) {
+    rotate = 1;
+  } else if(rotate_right >= 0.5 && rotate_right > rotate_left + 0.2) {
+    rotate = 2;
+  } else {
+    rotate = 0;
+  }
+
+  res->move = move;
+  res->rotate = rotate;
 
   print_response(res);
 }
@@ -64,4 +93,12 @@ Nnet_Host::~Nnet_Host() {}
 
 void Nnet_Host::run() {
   start_host(request_callback, this);
+}
+
+void Nnet_Host::lock() {
+  h_mutex.lock();
+}
+
+void Nnet_Host::unlock() {
+  h_mutex.unlock();
 }
